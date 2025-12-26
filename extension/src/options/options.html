@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuthLens Options</title>
+    <link rel="stylesheet" href="./options.css" />
+  </head>
+  <body>
+    <h1>AuthLens Options</h1>
+
+    <label class="row">
+      <input id="allowlistEnabled" type="checkbox" />
+      Enable allowlist mode
+    </label>
+
+    <p class="hint">
+      When enabled, AuthLens records only matching domains. Enter one domain per line.
+      Examples: example.com, *.example.com
+    </p>
+
+    <textarea id="allowlist" rows="8" placeholder="example.com"></textarea>
+
+    <div class="row actions">
+      <button id="save">Save</button>
+      <span id="status" class="status"></span>
+    </div>
+
+    <script type="module" src="./options.ts"></script>
+  </body>
+</html>

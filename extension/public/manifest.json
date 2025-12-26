@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "AuthLens",
+  "version": "0.1.0",
+  "description": "Debug OAuth/OIDC flows: redirects, PKCE/state/nonce, cookies, token leakage.",
+  "action": { "default_popup": "popup/popup.html" },
+  "options_page": "options/options.html",
+  "background": { "service_worker": "background.js", "type": "module" },
+  "permissions": ["tabs", "storage", "webRequest", "webNavigation", "downloads"],
+  "host_permissions": ["<all_urls>"],
+  "minimum_chrome_version": "114"
+}

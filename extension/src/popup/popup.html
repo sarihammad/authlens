@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuthLens</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <div class="row">
+      <div class="title">AuthLens</div>
+      <div id="status" class="badge">Loading...</div>
+    </div>
+
+    <p id="meta" class="meta"></p>
+
+    <div class="row actions">
+      <button id="export">Export trace</button>
+      <button id="clear">Clear</button>
+    </div>
+
+    <h4>Findings</h4>
+    <ul id="findings"></ul>
+
+    <script type="module" src="./popup.ts"></script>
+  </body>
+</html>

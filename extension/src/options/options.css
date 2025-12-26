@@ -1,0 +1,7 @@
+body { font-family: system-ui; margin: 16px; max-width: 720px; }
+.row { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+.hint { color: #444; margin: 8px 0; }
+textarea { width: 100%; padding: 8px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+.actions { gap: 12px; }
+button { padding: 8px 14px; }
+.status { color: #0b6; font-size: 14px; }

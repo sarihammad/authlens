@@ -1,0 +1,7 @@
+body { font-family: system-ui; margin: 12px; width: 360px; }
+.row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.title { font-weight: 700; }
+.badge { padding: 2px 8px; border: 1px solid #ccc; border-radius: 999px; font-size: 12px; }
+.meta { color: #444; margin: 8px 0 10px; }
+.actions button { padding: 8px 10px; }
+ul { padding-left: 18px; }
