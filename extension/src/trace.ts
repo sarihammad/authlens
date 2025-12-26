@@ -8,6 +8,7 @@ export type TraceEvent =
       url: string;
       initiator?: string;
       status?: number;
+      requestBodyKeys?: string[];
       requestHeaders?: Record<string, string>;
       responseHeaders?: { name: string; value: string }[];
     };
@@ -17,12 +18,16 @@ export type AuthTrace = {
   tabId: number;
   startedAtMs: number;
   events: TraceEvent[];
+  truncated?: boolean;
+  droppedEvents?: number;
 };
 
 export type Finding = {
   id: string;
   severity: "HIGH" | "MED" | "LOW";
+  confidence?: "HIGH" | "MED" | "LOW";
   title: string;
+  why?: string;
   fix: string;
   evidence?: string[];
 };
@@ -33,4 +38,6 @@ export type LiveSummary = {
   findings: Finding[];
   lastEventAtMs?: number;
   eventCount: number;
+  traceTruncated?: boolean;
+  droppedEvents?: number;
 };

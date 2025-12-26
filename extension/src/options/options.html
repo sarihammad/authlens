@@ -19,6 +19,17 @@
       Examples: example.com, *.example.com
     </p>
 
+    <div class="row">
+      <label for="preset">Presets</label>
+      <select id="preset">
+        <option value="">Select</option>
+        <option value="google">Google Accounts</option>
+        <option value="okta">Okta</option>
+        <option value="auth0">Auth0</option>
+      </select>
+      <button id="addPreset" type="button">Add preset</button>
+    </div>
+
     <textarea id="allowlist" rows="8" placeholder="example.com"></textarea>
 
     <div class="row actions">

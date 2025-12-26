@@ -13,6 +13,9 @@
     </div>
 
     <p id="meta" class="meta"></p>
+    <p id="privacyNotice" class="notice" hidden>
+      Allowlist is required. Open Options to add domains.
+    </p>
 
     <div class="row actions">
       <button id="export">Export trace</button>
@@ -21,6 +24,22 @@
 
     <h4>Findings</h4>
     <ul id="findings"></ul>
+    <div id="detail" class="detail" hidden>
+      <div class="row detail-header">
+        <strong id="detailTitle"></strong>
+        <button id="detailClose" type="button">Close</button>
+      </div>
+      <div class="detail-meta">
+        <span id="detailSeverity"></span>
+        <span id="detailConfidence"></span>
+      </div>
+      <p id="detailWhy"></p>
+      <p id="detailFix"></p>
+      <div>
+        <div class="detail-label">Evidence</div>
+        <ul id="detailEvidence"></ul>
+      </div>
+    </div>
 
     <script type="module" src="./popup.ts"></script>
   </body>

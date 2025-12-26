@@ -3,6 +3,8 @@ import { redactUrl, normalizeHeaders } from "./redact";
 import { loadTrace, saveTrace, saveSummary } from "./storage";
 import { isAuthUrl, liveFindingsFromUrl } from "./rules";
 import { loadSettings, defaultSettings, Settings } from "./settings";
+import { hostMatchesAllowlist } from "./allowlist";
+import { parseUrlParams } from "./url";
 
 const MAX_EVENTS = 500;
 const FLOW_KEY = (tabId: number) => `flow:${tabId}`;
@@ -26,7 +28,14 @@ function nowMs() {
 async function ensureTrace(tabId: number): Promise<AuthTrace> {
   const existing = await loadTrace(tabId);
   if (existing) return existing;
-  const t: AuthTrace = { version: 1, tabId, startedAtMs: nowMs(), events: [] };
+  const t: AuthTrace = {
+    version: 1,
+    tabId,
+    startedAtMs: nowMs(),
+    events: [],
+    truncated: false,
+    droppedEvents: 0
+  };
   await saveTrace(t);
   return t;
 }
@@ -55,43 +64,15 @@ function isAuthorizeUrl(url: string): boolean {
   return /\/(oauth\/authorize|authorize|oauth2\/authorize)\b/i.test(url);
 }
 
-function parseUrlParams(rawUrl: string): {
-  query: URLSearchParams;
-  fragment: URLSearchParams;
-} {
-  try {
-    const u = new URL(rawUrl);
-    const query = u.searchParams;
-    const fragment = new URLSearchParams(u.hash.startsWith("#") ? u.hash.slice(1) : "");
-    return { query, fragment };
-  } catch {
-    return { query: new URLSearchParams(), fragment: new URLSearchParams() };
-  }
-}
-
 async function getSettings(): Promise<Settings> {
   if (cachedSettings) return cachedSettings;
   cachedSettings = await loadSettings();
   return cachedSettings;
 }
 
-function hostMatchesAllowlist(host: string, allowlist: string[]): boolean {
-  const h = host.toLowerCase();
-  for (const entry of allowlist) {
-    if (!entry) continue;
-    const e = entry.toLowerCase();
-    if (e.startsWith("*.")) {
-      const suffix = e.slice(2);
-      if (h === suffix || h.endsWith(`.${suffix}`)) return true;
-      continue;
-    }
-    if (h === e || h.endsWith(`.${e}`)) return true;
-  }
-  return false;
-}
-
 async function shouldRecordUrl(rawUrl: string): Promise<boolean> {
   const settings = await getSettings();
+  if (!settings.onboarded) return false;
   if (!settings.allowlistEnabled) return true;
   if (settings.allowlist.length === 0) return false;
   try {
@@ -110,7 +91,10 @@ async function appendEvent(
   const trace = await ensureTrace(tabId);
   trace.events.push(ev);
   if (trace.events.length > MAX_EVENTS) {
-    trace.events.splice(0, trace.events.length - MAX_EVENTS);
+    const dropped = trace.events.length - MAX_EVENTS;
+    trace.events.splice(0, dropped);
+    trace.truncated = true;
+    trace.droppedEvents = (trace.droppedEvents ?? 0) + dropped;
   }
   await saveTrace(trace);
 
@@ -130,7 +114,9 @@ async function appendEvent(
     hasAuthSignals,
     findings,
     eventCount: trace.events.length,
-    lastEventAtMs: Date.now()
+    lastEventAtMs: Date.now(),
+    traceTruncated: trace.truncated,
+    droppedEvents: trace.droppedEvents
   };
   await saveSummary(summary);
 }
@@ -142,6 +128,31 @@ chrome.webRequest.onBeforeRequest.addListener(
     const url = redactUrl(details.url);
     const params = parseUrlParams(details.url);
     const findings: Finding[] = [];
+    const requestBodyKeys: string[] = [];
+
+    if (details.requestBody?.formData) {
+      for (const key of Object.keys(details.requestBody.formData)) {
+        requestBodyKeys.push(key);
+      }
+    }
+
+    const isTokenUrl = /\/(oauth\/token|token)\b/i.test(details.url);
+    if (isTokenUrl && requestBodyKeys.length) {
+      const hasCodeVerifier = requestBodyKeys.some(
+        (k) => k.toLowerCase() === "code_verifier"
+      );
+      if (!hasCodeVerifier) {
+        findings.push({
+          id: "PKCE_VERIFIER_MISSING",
+          severity: "MED",
+          confidence: "MED",
+          title: "Token request missing code_verifier",
+          why: "Missing code_verifier prevents PKCE validation.",
+          fix: "Include code_verifier in token requests for Authorization Code + PKCE.",
+          evidence: [url]
+        });
+      }
+    }
 
     if (isAuthorizeUrl(details.url)) {
       const state = params.query.get("state") ?? undefined;
@@ -160,7 +171,9 @@ chrome.webRequest.onBeforeRequest.addListener(
         findings.push({
           id: "NONCE_MISSING",
           severity: "HIGH",
+          confidence: "HIGH",
           title: "Authorize request missing nonce",
+          why: "OIDC requires nonce to prevent token replay.",
           fix: "Include a nonce for OIDC flows and validate it in the ID token.",
           evidence: [url]
         });
@@ -170,7 +183,9 @@ chrome.webRequest.onBeforeRequest.addListener(
         findings.push({
           id: "PKCE_MISSING",
           severity: "HIGH",
+          confidence: "HIGH",
           title: "Authorize request missing PKCE code_challenge",
+          why: "PKCE mitigates code interception attacks for public clients.",
           fix: "Use Authorization Code + PKCE for public clients.",
           evidence: [url]
         });
@@ -178,7 +193,9 @@ chrome.webRequest.onBeforeRequest.addListener(
         findings.push({
           id: "PKCE_NOT_S256",
           severity: "MED",
+          confidence: "MED",
           title: "PKCE code_challenge_method is not S256",
+          why: "S256 is the recommended PKCE method.",
           fix: "Prefer S256 for PKCE. Avoid 'plain' except in constrained environments.",
           evidence: [url]
         });
@@ -207,7 +224,9 @@ chrome.webRequest.onBeforeRequest.addListener(
         findings.push({
           id: "STATE_MISSING",
           severity: "HIGH",
+          confidence: "HIGH",
           title: "Callback includes code but no state",
+          why: "State is required to prevent CSRF and code injection.",
           fix: "Always include and validate state to prevent CSRF/code injection.",
           evidence: [url]
         });
@@ -215,7 +234,9 @@ chrome.webRequest.onBeforeRequest.addListener(
         findings.push({
           id: "STATE_MISMATCH",
           severity: "HIGH",
+          confidence: "HIGH",
           title: "Callback state does not match authorize state",
+          why: "Mismatched state indicates possible request forgery.",
           fix: "Reject callbacks with unexpected state values.",
           evidence: [url]
         });
@@ -228,7 +249,8 @@ chrome.webRequest.onBeforeRequest.addListener(
       requestId: details.requestId,
       method: details.method,
       url,
-      initiator: details.initiator ? redactUrl(details.initiator) : undefined
+      initiator: details.initiator ? redactUrl(details.initiator) : undefined,
+      requestBodyKeys: requestBodyKeys.length ? requestBodyKeys : undefined
     };
 
     const urlFindings = isAuthUrl(details.url)
@@ -240,7 +262,8 @@ chrome.webRequest.onBeforeRequest.addListener(
 
     await appendEvent(details.tabId, ev, [...findings, ...urlFindings]);
   },
-  { urls: ["<all_urls>"] }
+  { urls: ["<all_urls>"] },
+  ["requestBody"]
 );
 
 chrome.webRequest.onHeadersReceived.addListener(

@@ -1,32 +1,23 @@
 import { loadSettings, saveSettings } from "../settings";
+import { normalizeAllowlistInput } from "../allowlist";
 
-function parseAllowlist(input: string): string[] {
-  const raw = input
-    .split(/\r?\n|,|\s+/)
-    .map((entry) => entry.trim())
-    .filter(Boolean);
-
-  const out: string[] = [];
-  for (const entry of raw) {
-    try {
-      if (entry.includes("://")) {
-        out.push(new URL(entry).hostname.toLowerCase());
-      } else {
-        out.push(entry.toLowerCase());
-      }
-    } catch {
-      out.push(entry.toLowerCase());
-    }
-  }
-
-  return Array.from(new Set(out));
-}
+const PRESETS: Record<string, string[]> = {
+  google: [
+    "accounts.google.com",
+    "oauth2.googleapis.com",
+    "googleapis.com"
+  ],
+  okta: ["okta.com", "oktapreview.com", "okta-emea.com"],
+  auth0: ["auth0.com"]
+};
 
 async function main() {
   const allowlistEnabled = document.getElementById(
     "allowlistEnabled"
   ) as HTMLInputElement;
   const allowlist = document.getElementById("allowlist") as HTMLTextAreaElement;
+  const preset = document.getElementById("preset") as HTMLSelectElement;
+  const addPreset = document.getElementById("addPreset") as HTMLButtonElement;
   const saveBtn = document.getElementById("save") as HTMLButtonElement;
   const status = document.getElementById("status") as HTMLSpanElement;
 
@@ -34,10 +25,23 @@ async function main() {
   allowlistEnabled.checked = settings.allowlistEnabled;
   allowlist.value = settings.allowlist.join("\n");
 
+  addPreset.onclick = () => {
+    const selected = preset.value;
+    if (!selected || !PRESETS[selected]) return;
+    const current = normalizeAllowlistInput(allowlist.value);
+    const next = Array.from(new Set([...current, ...PRESETS[selected]]));
+    allowlist.value = next.join("\n");
+  };
+
   saveBtn.onclick = async () => {
+    if (allowlistEnabled.checked && normalizeAllowlistInput(allowlist.value).length === 0) {
+      status.textContent = "Add at least one domain.";
+      return;
+    }
     const next = {
       allowlistEnabled: allowlistEnabled.checked,
-      allowlist: parseAllowlist(allowlist.value)
+      allowlist: normalizeAllowlistInput(allowlist.value),
+      onboarded: true
     };
     await saveSettings(next);
     status.textContent = "Saved";

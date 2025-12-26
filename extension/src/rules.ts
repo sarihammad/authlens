@@ -25,7 +25,9 @@ export function liveFindingsFromUrl(url: string): Finding[] {
       findings.push({
         id: "TOKEN_IN_QUERY",
         severity: "HIGH",
+        confidence: "HIGH",
         title: "Token appears in URL query string",
+        why: "URLs are logged and can leak via referrer headers.",
         fix: "Do not put tokens in URLs. Use Authorization header or secure cookies.",
         evidence: [url]
       });
@@ -35,7 +37,9 @@ export function liveFindingsFromUrl(url: string): Finding[] {
       findings.push({
         id: "TOKEN_IN_FRAGMENT",
         severity: "MED",
+        confidence: "MED",
         title: "Token appears in URL fragment",
+        why: "Fragments can be exposed to browser history or extensions.",
         fix: "Avoid implicit/hybrid flows; use Authorization Code + PKCE.",
         evidence: [url]
       });
