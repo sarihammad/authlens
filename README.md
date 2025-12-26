@@ -10,7 +10,7 @@ AuthLens is a Chrome Extension plus a C++ analyzer that detects OAuth/OIDC flow 
 
 ![AuthLens popup](docs/assets/screenshot-authlens.png)
 
-<video src="docs/assets/demo-authlens.mp4" controls width="720"></video>
+Demo (MP4): `docs/assets/demo-authlens.mp4`
 
 ## Architecture
 
