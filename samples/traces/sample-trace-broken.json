@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "tabId": 456,
+  "startedAtMs": 1730000001000,
+  "events": [
+    {
+      "tMs": 5,
+      "type": "HTTP",
+      "requestId": "a1",
+      "method": "GET",
+      "url": "https://idp.example.com/oauth/authorize?client_id=client123&response_type=code&scope=openid%20profile&code_challenge=challenge123&code_challenge_method=plain"
+    },
+    {
+      "tMs": 210,
+      "type": "HTTP",
+      "requestId": "a2",
+      "method": "GET",
+      "url": "https://client.example.com/callback?code=%3Credacted%20len%3D24%3E"
+    },
+    {
+      "tMs": 420,
+      "type": "HTTP",
+      "requestId": "a3",
+      "method": "POST",
+      "url": "https://idp.example.com/oauth/token"
+    },
+    {
+      "tMs": 450,
+      "type": "HTTP",
+      "requestId": "a3",
+      "method": "POST",
+      "url": "https://idp.example.com/oauth/token",
+      "status": 200,
+      "responseHeaders": [
+        { "name": "Set-Cookie", "value": "sid=abc123; Path=/; SameSite=None" },
+        { "name": "Set-Cookie", "value": "sessid=def456; Path=/" }
+      ]
+    },
+    {
+      "tMs": 800,
+      "type": "HTTP",
+      "requestId": "a4",
+      "method": "GET",
+      "url": "https://client.example.com/callback?access_token=%3Credacted%20len%3D32%3E"
+    },
+    {
+      "tMs": 900,
+      "type": "HTTP",
+      "requestId": "a5",
+      "method": "GET",
+      "url": "https://client.example.com/#id_token=%3Credacted%20len%3D48%3E"
+    }
+  ]
+}

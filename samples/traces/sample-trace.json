@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "tabId": 123,
+  "startedAtMs": 1730000000000,
+  "events": [
+    {
+      "tMs": 12,
+      "type": "HTTP",
+      "requestId": "r1",
+      "method": "GET",
+      "url": "https://idp.example.com/oauth/authorize?client_id=client123&response_type=code&scope=openid%20profile&state=state123&nonce=nonce123&code_challenge=challenge123&code_challenge_method=S256"
+    },
+    {
+      "tMs": 220,
+      "type": "HTTP",
+      "requestId": "r2",
+      "method": "GET",
+      "url": "https://client.example.com/callback?code=%3Credacted%20len%3D20%3E&state=state123"
+    },
+    {
+      "tMs": 520,
+      "type": "HTTP",
+      "requestId": "r3",
+      "method": "POST",
+      "url": "https://idp.example.com/oauth/token"
+    },
+    {
+      "tMs": 560,
+      "type": "HTTP",
+      "requestId": "r3",
+      "method": "POST",
+      "url": "https://idp.example.com/oauth/token",
+      "status": 200,
+      "responseHeaders": [
+        { "name": "Set-Cookie", "value": "sid=abc123; HttpOnly; Path=/" }
+      ]
+    },
+    {
+      "tMs": 900,
+      "type": "HTTP",
+      "requestId": "r4",
+      "method": "GET",
+      "url": "https://client.example.com/#access_token=%3Credacted%20len%3D30%3E&token_type=bearer"
+    }
+  ]
+}

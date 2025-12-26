@@ -1,0 +1,30 @@
+{
+  "findings": [
+    {
+      "evidence": [
+        "sid=abc123; HttpOnly; Path=/"
+      ],
+      "fix": "Mark session cookies Secure (and serve over HTTPS).",
+      "id": "COOKIE_MISSING_SECURE",
+      "severity": "MED",
+      "title": "Session cookie missing Secure"
+    },
+    {
+      "evidence": [
+        "https://client.example.com/#access_token=%3Credacted%20len%3D30%3E&token_type=bearer"
+      ],
+      "fix": "Avoid implicit/hybrid flows; use Authorization Code + PKCE.",
+      "id": "TOKEN_IN_FRAGMENT",
+      "severity": "MED",
+      "title": "Token appears in URL fragment"
+    }
+  ],
+  "startedAtMs": -871820288,
+  "summary": {
+    "HIGH": 0,
+    "LOW": 0,
+    "MED": 2
+  },
+  "tabId": 123,
+  "version": 1
+}

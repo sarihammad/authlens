@@ -1,0 +1,89 @@
+{
+  "findings": [
+    {
+      "evidence": [
+        "sid=abc123; Path=/; SameSite=None"
+      ],
+      "fix": "Mark session cookies Secure (and serve over HTTPS).",
+      "id": "COOKIE_MISSING_SECURE",
+      "severity": "MED",
+      "title": "Session cookie missing Secure"
+    },
+    {
+      "evidence": [
+        "sid=abc123; Path=/; SameSite=None"
+      ],
+      "fix": "Mark session cookies HttpOnly to reduce XSS token theft risk.",
+      "id": "COOKIE_MISSING_HTTPONLY",
+      "severity": "MED",
+      "title": "Session cookie missing HttpOnly"
+    },
+    {
+      "evidence": [
+        "sid=abc123; Path=/; SameSite=None"
+      ],
+      "fix": "Chrome requires Secure when SameSite=None. Add Secure or change SameSite.",
+      "id": "SAMESITE_NONE_WITHOUT_SECURE",
+      "severity": "HIGH",
+      "title": "SameSite=None cookie without Secure"
+    },
+    {
+      "evidence": [
+        "sessid=def456; Path=/"
+      ],
+      "fix": "Mark session cookies Secure (and serve over HTTPS).",
+      "id": "COOKIE_MISSING_SECURE",
+      "severity": "MED",
+      "title": "Session cookie missing Secure"
+    },
+    {
+      "evidence": [
+        "sessid=def456; Path=/"
+      ],
+      "fix": "Mark session cookies HttpOnly to reduce XSS token theft risk.",
+      "id": "COOKIE_MISSING_HTTPONLY",
+      "severity": "MED",
+      "title": "Session cookie missing HttpOnly"
+    },
+    {
+      "evidence": [
+        "https://client.example.com/callback?access_token=%3Credacted%20len%3D32%3E"
+      ],
+      "fix": "Do not put tokens in URLs. Use Authorization header or secure cookies.",
+      "id": "TOKEN_IN_QUERY",
+      "severity": "HIGH",
+      "title": "Token appears in URL query string"
+    },
+    {
+      "evidence": [
+        "https://client.example.com/#id_token=%3Credacted%20len%3D48%3E"
+      ],
+      "fix": "Avoid implicit/hybrid flows; use Authorization Code + PKCE.",
+      "id": "TOKEN_IN_FRAGMENT",
+      "severity": "MED",
+      "title": "Token appears in URL fragment"
+    },
+    {
+      "evidence": [],
+      "fix": "Always include and validate state to prevent CSRF/code injection.",
+      "id": "STATE_MISSING",
+      "severity": "HIGH",
+      "title": "Callback has code but no state"
+    },
+    {
+      "evidence": [],
+      "fix": "Prefer S256 for PKCE. Avoid 'plain' except in constrained environments.",
+      "id": "PKCE_NOT_S256",
+      "severity": "MED",
+      "title": "PKCE code_challenge_method is not S256"
+    }
+  ],
+  "startedAtMs": -871819288,
+  "summary": {
+    "HIGH": 3,
+    "LOW": 0,
+    "MED": 6
+  },
+  "tabId": 456,
+  "version": 1
+}
