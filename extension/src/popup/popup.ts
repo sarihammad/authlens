@@ -2,6 +2,8 @@ import { loadSummary, loadTrace, clearTrace } from "../storage";
 import { loadSettings } from "../settings";
 import { Finding } from "../trace";
 
+const renderStartMs = performance.now();
+
 async function getActiveTabId(): Promise<number | null> {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   return tab?.id ?? null;
@@ -143,6 +145,8 @@ async function main() {
   });
 
   await render();
+  const renderDurationMs = performance.now() - renderStartMs;
+  console.info(`[AuthLens] popup initial render: ${renderDurationMs.toFixed(2)}ms`);
 }
 
 main().catch(console.error);
