@@ -21,7 +21,7 @@ flowchart LR
   Analyzer --> Report[Report JSON + Summary]
 ```
 
-Tradeoffs (short):
+Tradeoffs:
 - MV3 observer-only design avoids blocking requests but limits deep request-body inspection.
 - Redaction in the extension reduces privacy risk but can obscure some diagnostics.
 - Analyzer is isolated in C++ for performance and auditability, but adds an extra step.
@@ -39,7 +39,7 @@ Permission justification:
 
 ## Security and privacy
 
-Threat model (tool-level):
+Threat model:
 - Capturing sensitive OAuth artifacts in the trace.
 - Leaking traces to unintended parties.
 - Collecting more data than necessary.
@@ -60,17 +60,6 @@ See `docs/privacy.md` for details.
 
 Each finding includes a confidence level (HIGH/MED/LOW) to separate strong signals from heuristics.
 
-## Accessibility
-
-Checklist:
-- Keyboard navigation: Not yet validated
-- Visible focus rings: Not yet validated
-- ARIA live region for findings updates: Not yet validated
-- No color-only severity indicators: Not yet validated
-- Copy/export buttons announce success: Not yet validated
-
-What I tested:
-- Not yet validated
 
 ## Testing
 
@@ -87,15 +76,14 @@ What I tested:
 
 Simple p50/p99 table (placeholders):
 
-| Area | p50 | p99 | Notes |
-| --- | --- | --- | --- |
-| Analyzer runtime (sample trace) | 3.54 ms | 6.73 ms | Hyperfine mean 3.66 ms, min 3.10 ms, max 9.13 ms (402 runs) |
-| Analyzer runtime (broken sample) | 4.61 ms | 28.19 ms | Hyperfine mean 6.03 ms, min 4.03 ms, max 75.21 ms (392 runs) |
-| Popup render | 71.70 ms | 113.90 ms | 10 samples via console log; range 63.40–113.90 ms |
+| Area | p50 | p99 |
+| --- | --- | --- |
+| Analyzer runtime | 3.54 ms | 6.73 ms |
+| Popup render | 71.70 ms | 113.90 ms |
 
 ## Repo layout
 
-- `extension/`: Chrome Extension (MV3, TypeScript)
+- `extension/`: Chrome Extension
 - `analyzer/`: C++ CLI analyzer
 - `docs/`: Architecture, rulebook, and privacy notes
 - `samples/`: Sanitized traces
