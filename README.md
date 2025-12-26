@@ -23,6 +23,17 @@ Tradeoffs (short):
 - Redaction in the extension reduces privacy risk but can obscure some diagnostics.
 - Analyzer is isolated in C++ for performance and auditability, but adds an extra step.
 
+## Privacy and permissions
+
+Default posture:
+- Allowlist mode is enabled by default and capture is disabled until the user configures domains.
+- Host permissions remain broad to support dynamic allowlisting; onboarding makes this explicit.
+
+Permission justification:
+- `webRequest` + `webNavigation`: observe redirects and headers for auth flows.
+- `tabs` + `storage`: per-tab trace state in session storage.
+- `downloads`: export redacted traces on demand.
+
 ## Security and privacy
 
 Threat model (tool-level):
@@ -32,11 +43,19 @@ Threat model (tool-level):
 
 Mitigations:
 - Mandatory redaction of code, tokens, client_secret, and Authorization headers.
-- Store per-tab traces in session storage only, not persistent sync.
+- No request body values stored; only field names when available.
+- Allowlist required before capture and traces stored in session storage only.
 - Export is user-initiated and produces a local file only.
-- Allowlist mode (options page) limits capture to approved domains.
 
-See `docs/privacy.md` for redaction details.
+Redaction invariants:
+- We never store secrets in the trace.
+- Redaction runs before any export.
+
+See `docs/privacy.md` for details.
+
+## Findings and confidence
+
+Each finding includes a confidence level (HIGH/MED/LOW) to separate strong signals from heuristics.
 
 ## Accessibility
 
@@ -52,9 +71,14 @@ What I tested:
 
 ## Testing
 
-- Unit: TODO (rules, redaction, parser helpers)
-- Integration: TODO (trace export -> analyzer report)
+- Unit: URL parsing, redaction guarantees, allowlist matching, rule triggers.
+- Integration: feed a known trace to the analyzer and compare to golden report.
 - E2E: TODO (real OAuth flow with a demo client)
+
+## CI and releases
+
+- CI builds the extension, runs unit tests, builds the analyzer, and runs the integration test.
+- Release workflow builds artifacts for tagged releases (extension zip + analyzer binaries).
 
 ## Performance
 

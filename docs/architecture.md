@@ -13,3 +13,5 @@ Data flow:
 The boundary between collection and analysis keeps browser permissions minimal and isolates heavier analysis logic.
 
 Note: response headers are stored as a list of {name, value} pairs so multiple Set-Cookie headers are preserved.
+Request bodies are not stored; the trace captures only field names (when available) for best-effort correlation.
+Traces include a truncation flag and dropped event count if the event buffer overflows.
