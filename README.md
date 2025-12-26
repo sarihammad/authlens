@@ -90,7 +90,7 @@ Simple p50/p99 table (placeholders):
 
 | Area | p50 | p99 | Notes |
 | --- | --- | --- | --- |
-| Analyzer runtime (sample trace) | TBD | TBD | Hyperfine mean 3.9 ms; range 3.2–34.7 ms (78 runs) |
+| Analyzer runtime (sample trace) | 3.54 ms | 6.73 ms | Hyperfine mean 3.66 ms, min 3.10 ms, max 9.13 ms (402 runs) |
 | Analyzer runtime (broken sample) | TBD | TBD | Not yet measured |
 | Popup render | TBD | TBD | Not yet measured |
 
