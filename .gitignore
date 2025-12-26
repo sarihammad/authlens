@@ -1,0 +1,13 @@
+.DS_Store
+
+# Node
+node_modules/
+
+# Extension build output
+extension/dist/
+
+# C++ build output
+analyzer/build/
+
+# Misc
+*.log
