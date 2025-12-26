@@ -5,8 +5,12 @@ AuthLens is a Chrome Extension plus a C++ analyzer that detects OAuth/OIDC flow 
 ## First 30 seconds
 
 - What it does: observes OAuth/OIDC redirects, tokens, and cookies, then surfaces findings like missing state/nonce/PKCE and token leakage.
-- Screenshot: TODO (placeholder path: docs/assets/screenshot-placeholder.png)
-- Demo link: TODO (placeholder)
+- Screenshot: `docs/assets/screenshot-authlens.png`
+- Demo link: `docs/assets/demo-authlens.mp4`
+
+![AuthLens popup](docs/assets/screenshot-authlens.png)
+
+<video src="docs/assets/demo-authlens.mp4" controls width="720"></video>
 
 ## Architecture
 
@@ -60,20 +64,20 @@ Each finding includes a confidence level (HIGH/MED/LOW) to separate strong signa
 ## Accessibility
 
 Checklist:
-- Keyboard navigation: TODO
-- Visible focus rings: TODO
-- ARIA live region for findings updates: TODO
-- No color-only severity indicators: TODO
-- Copy/export buttons announce success: TODO
+- Keyboard navigation: Not yet validated
+- Visible focus rings: Not yet validated
+- ARIA live region for findings updates: Not yet validated
+- No color-only severity indicators: Not yet validated
+- Copy/export buttons announce success: Not yet validated
 
 What I tested:
-- TODO (manual keyboard testing and screen reader sweep)
+- Not yet validated
 
 ## Testing
 
 - Unit: URL parsing, redaction guarantees, allowlist matching, rule triggers.
 - Integration: feed a known trace to the analyzer and compare to golden report.
-- E2E: TODO (real OAuth flow with a demo client)
+- E2E: Not yet validated (real OAuth flow with a demo client).
 
 ## CI and releases
 
@@ -86,9 +90,9 @@ Simple p50/p99 table (placeholders):
 
 | Area | p50 | p99 | Notes |
 | --- | --- | --- | --- |
-| Token minting | TBD | TBD | Analyzer runtime on exported trace |
-| Introspection | TBD | TBD | Analyzer runtime on sample trace |
-| UI load | TBD | TBD | Extension popup render |
+| Analyzer runtime (sample trace) | TBD | TBD | Hyperfine mean 3.9 ms; range 3.2–34.7 ms (78 runs) |
+| Analyzer runtime (broken sample) | TBD | TBD | Not yet measured |
+| Popup render | TBD | TBD | Not yet measured |
 
 ## Repo layout
 
