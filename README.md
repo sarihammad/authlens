@@ -92,7 +92,7 @@ Simple p50/p99 table (placeholders):
 | --- | --- | --- | --- |
 | Analyzer runtime (sample trace) | 3.54 ms | 6.73 ms | Hyperfine mean 3.66 ms, min 3.10 ms, max 9.13 ms (402 runs) |
 | Analyzer runtime (broken sample) | 4.61 ms | 28.19 ms | Hyperfine mean 6.03 ms, min 4.03 ms, max 75.21 ms (392 runs) |
-| Popup render | TBD | TBD | Instrumented console log: `[AuthLens] popup initial render: <ms>` |
+| Popup render | 71.70 ms | 113.90 ms | 10 samples via console log; range 63.40–113.90 ms |
 
 ## Repo layout
 
