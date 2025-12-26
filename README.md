@@ -2,11 +2,7 @@
 
 A Chrome Extension plus a C++ analyzer that detects OAuth/OIDC flow issues and exports a redacted trace for offline analysis.
 
-## First 30 seconds
-
-- What it does: observes OAuth/OIDC redirects, tokens, and cookies, then surfaces findings like missing state/nonce/PKCE and token leakage.
-- Screenshot: `docs/assets/screenshot-authlens.png`
-- Demo link: `docs/assets/demo-authlens.mp4`
+## Demo
 
 ![AuthLens popup](docs/assets/screenshot-authlens.png)
 ![demo-authlens (1)](https://github.com/user-attachments/assets/66abc9cd-6605-4fdb-b814-819d1d9b0970)
