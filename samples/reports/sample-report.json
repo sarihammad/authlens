@@ -1,22 +1,26 @@
 {
   "findings": [
     {
+      "confidence": "MED",
       "evidence": [
         "sid=abc123; HttpOnly; Path=/"
       ],
       "fix": "Mark session cookies Secure (and serve over HTTPS).",
       "id": "COOKIE_MISSING_SECURE",
       "severity": "MED",
-      "title": "Session cookie missing Secure"
+      "title": "Session cookie missing Secure",
+      "why": "Session cookies without Secure can be sent over HTTP."
     },
     {
+      "confidence": "MED",
       "evidence": [
         "https://client.example.com/#access_token=%3Credacted%20len%3D30%3E&token_type=bearer"
       ],
       "fix": "Avoid implicit/hybrid flows; use Authorization Code + PKCE.",
       "id": "TOKEN_IN_FRAGMENT",
       "severity": "MED",
-      "title": "Token appears in URL fragment"
+      "title": "Token appears in URL fragment",
+      "why": "Fragments can be exposed to browser history or extensions."
     }
   ],
   "startedAtMs": -871820288,

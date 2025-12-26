@@ -1,88 +1,124 @@
 {
   "findings": [
     {
+      "confidence": "MED",
       "evidence": [
         "sid=abc123; Path=/; SameSite=None"
       ],
       "fix": "Mark session cookies Secure (and serve over HTTPS).",
       "id": "COOKIE_MISSING_SECURE",
       "severity": "MED",
-      "title": "Session cookie missing Secure"
+      "title": "Session cookie missing Secure",
+      "why": "Session cookies without Secure can be sent over HTTP."
     },
     {
+      "confidence": "MED",
       "evidence": [
         "sid=abc123; Path=/; SameSite=None"
       ],
       "fix": "Mark session cookies HttpOnly to reduce XSS token theft risk.",
       "id": "COOKIE_MISSING_HTTPONLY",
       "severity": "MED",
-      "title": "Session cookie missing HttpOnly"
+      "title": "Session cookie missing HttpOnly",
+      "why": "Missing HttpOnly increases risk of XSS token theft."
     },
     {
+      "confidence": "HIGH",
       "evidence": [
         "sid=abc123; Path=/; SameSite=None"
       ],
       "fix": "Chrome requires Secure when SameSite=None. Add Secure or change SameSite.",
       "id": "SAMESITE_NONE_WITHOUT_SECURE",
       "severity": "HIGH",
-      "title": "SameSite=None cookie without Secure"
+      "title": "SameSite=None cookie without Secure",
+      "why": "Browsers reject SameSite=None cookies without Secure."
     },
     {
+      "confidence": "MED",
       "evidence": [
         "sessid=def456; Path=/"
       ],
       "fix": "Mark session cookies Secure (and serve over HTTPS).",
       "id": "COOKIE_MISSING_SECURE",
       "severity": "MED",
-      "title": "Session cookie missing Secure"
+      "title": "Session cookie missing Secure",
+      "why": "Session cookies without Secure can be sent over HTTP."
     },
     {
+      "confidence": "MED",
       "evidence": [
         "sessid=def456; Path=/"
       ],
       "fix": "Mark session cookies HttpOnly to reduce XSS token theft risk.",
       "id": "COOKIE_MISSING_HTTPONLY",
       "severity": "MED",
-      "title": "Session cookie missing HttpOnly"
+      "title": "Session cookie missing HttpOnly",
+      "why": "Missing HttpOnly increases risk of XSS token theft."
     },
     {
+      "confidence": "HIGH",
       "evidence": [
         "https://client.example.com/callback?access_token=%3Credacted%20len%3D32%3E"
       ],
       "fix": "Do not put tokens in URLs. Use Authorization header or secure cookies.",
       "id": "TOKEN_IN_QUERY",
       "severity": "HIGH",
-      "title": "Token appears in URL query string"
+      "title": "Token appears in URL query string",
+      "why": "URLs are logged and can leak via referrer headers."
     },
     {
+      "confidence": "MED",
       "evidence": [
         "https://client.example.com/#id_token=%3Credacted%20len%3D48%3E"
       ],
       "fix": "Avoid implicit/hybrid flows; use Authorization Code + PKCE.",
       "id": "TOKEN_IN_FRAGMENT",
       "severity": "MED",
-      "title": "Token appears in URL fragment"
+      "title": "Token appears in URL fragment",
+      "why": "Fragments can be exposed to browser history or extensions."
     },
     {
+      "confidence": "HIGH",
       "evidence": [],
       "fix": "Always include and validate state to prevent CSRF/code injection.",
       "id": "STATE_MISSING",
       "severity": "HIGH",
-      "title": "Callback has code but no state"
+      "title": "Callback has code but no state",
+      "why": "State is required to prevent CSRF and code injection."
     },
     {
+      "confidence": "HIGH",
+      "evidence": [],
+      "fix": "Include a nonce for OIDC flows and validate it in the ID token.",
+      "id": "NONCE_MISSING",
+      "severity": "HIGH",
+      "title": "Authorize request missing nonce",
+      "why": "OIDC requires nonce to prevent token replay."
+    },
+    {
+      "confidence": "MED",
       "evidence": [],
       "fix": "Prefer S256 for PKCE. Avoid 'plain' except in constrained environments.",
       "id": "PKCE_NOT_S256",
       "severity": "MED",
-      "title": "PKCE code_challenge_method is not S256"
+      "title": "PKCE code_challenge_method is not S256",
+      "why": "S256 is the recommended PKCE method."
+    },
+    {
+      "confidence": "MED",
+      "evidence": [],
+      "fix": "Include code_verifier in token requests for Authorization Code + PKCE.",
+      "id": "PKCE_VERIFIER_MISSING",
+      "severity": "MED",
+      "title": "Token request missing code_verifier",
+      "why": "Missing code_verifier prevents PKCE validation."
     }
   ],
   "startedAtMs": -871819288,
   "summary": {
-    "HIGH": 3,
+    "HIGH": 4,
     "LOW": 0,
-    "MED": 6
+    "MED": 7
   },
   "tabId": 456,
   "version": 1

@@ -22,7 +22,8 @@
       "type": "HTTP",
       "requestId": "r3",
       "method": "POST",
-      "url": "https://idp.example.com/oauth/token"
+      "url": "https://idp.example.com/oauth/token",
+      "requestBodyKeys": ["grant_type", "code", "code_verifier"]
     },
     {
       "tMs": 560,
