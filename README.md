@@ -1,6 +1,6 @@
 # AuthLens
 
-A Chrome Extension plus a C++ analyzer that detects OAuth/OIDC flow issues and exports a redacted trace for offline analysis.
+A Chrome Extension & C++ analyzer that detects OAuth/OIDC flow issues and exports a redacted trace for offline analysis.
 
 ## Demo
 
